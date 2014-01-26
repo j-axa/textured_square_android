@@ -37,7 +37,7 @@ public final class TextureUtils {
 
         // Load the bitmap into the bound texture.
         GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0);
-            OpenGLRenderer.checkGlError("texImage2D");
+//            OpenGLRenderer.checkGlError("texImage2D");
 
 
         }

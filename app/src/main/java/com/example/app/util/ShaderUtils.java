@@ -46,7 +46,7 @@ public final class ShaderUtils {
         OpenGLRenderer.checkGlError("glCompileShader");
 
 
-        Log.d("ShaderUtils.createShader", "glGetShaderInfoLog: " +GLES30.glGetShaderInfoLog(shader) );
+        //Log.d("ShaderUtils.createShader", "glGetShaderInfoLog: " +GLES30.glGetShaderInfoLog(shader) );
 
 
         return shader;
