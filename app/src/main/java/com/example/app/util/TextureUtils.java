@@ -1,8 +1,6 @@
 package com.example.app.util;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,46 +21,33 @@ public final class TextureUtils {
     public static final int createTexture(final Bitmap bitmap)
     {
         final int[] textureHandle = new int[1];
-
         GLES30.glGenTextures(1, textureHandle, 0);
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureHandle[0]);
-
-        if (textureHandle[0] != 0)
-        {
-
+        if (textureHandle[0] != 0) {
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureHandle[0]);
 
             // Set filtering
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST);
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST);
+            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST);
+            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST);
 
-        // Load the bitmap into the bound texture.
-        GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0);
-//            OpenGLRenderer.checkGlError("texImage2D");
-
-
+            // Load the bitmap into the bound texture.
+            GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0);
         }
-
-        if (textureHandle[0] == 0)
-        {
+        if (textureHandle[0] == 0) {
             throw new RuntimeException("Error loading texture.");
         }
-
         return textureHandle[0];
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static final Bitmap loadTextureData(final AssetManager assets, final String fileName) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inScaled = false;   // No pre-scaling
-
-
-            try(final InputStream s = assets.open(fileName)) {
-                final Bitmap bmp = BitmapFactory.decodeStream(s);
-                return bmp;
-            }
+        options.inScaled = false;
+        try (final InputStream s = assets.open(fileName)) {
+            final Bitmap bmp = BitmapFactory.decodeStream(s);
+            return bmp;
+        }
         catch(IOException e) {
             throw new RuntimeException("Error loading texture.", e);
         }
-
     }
 }

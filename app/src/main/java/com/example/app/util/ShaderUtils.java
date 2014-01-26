@@ -22,7 +22,7 @@ import java.util.Scanner;
 public final class ShaderUtils {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static final String loadShader(final AssetManager assets, final String fileName) {
-        try(final InputStream s = assets.open(fileName)) {
+        try (final InputStream s = assets.open(fileName)) {
             final int length = s.available();
             final byte[] buffer = new byte[length];
             s.read(buffer);
@@ -33,10 +33,8 @@ public final class ShaderUtils {
         }
     }
 
-    public static int createShader(final int type, final String shaderCode) {
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-        final int shader = GLES30.glCreateShader(type);
+    public static int createShader(final int gl_shader_type, final String shaderCode) {
+        final int shader = GLES30.glCreateShader(gl_shader_type);
 
         // add the source code to the shader and compile it
         GLES30.glShaderSource(shader, shaderCode);
@@ -44,10 +42,7 @@ public final class ShaderUtils {
 
         GLES30.glCompileShader(shader);
         OpenGLRenderer.checkGlError("glCompileShader");
-
-
         //Log.d("ShaderUtils.createShader", "glGetShaderInfoLog: " +GLES30.glGetShaderInfoLog(shader) );
-
 
         return shader;
     }
