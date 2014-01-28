@@ -8,6 +8,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.example.app.util.ShaderUtils;
 import com.example.app.util.TextureUtils;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -19,12 +20,15 @@ import javax.microedition.khronos.opengles.GL10;
 public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
     private final Bitmap squareTexture;
-    private final AssetManager assets;
+    private final String squareVertexShaderCode;
+    private final String squareFragmentShaderCode;
     private Square square;
 
     public OpenGLRenderer(final Context context) {
-        assets = context.getAssets();
+        AssetManager assets = context.getAssets();
         squareTexture = TextureUtils.loadTextureData(assets, "texture/placeholder512.png");
+        squareVertexShaderCode = ShaderUtils.loadShader(assets, "shader/simple_vertex.glsl");
+        squareFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/simple_fragment.glsl");
 
         Matrix.setLookAtM(viewMatrix, 0,
                           0f, 0f, -3f, // eye XYZ
@@ -39,19 +43,11 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES30.glClearColor(0.3f, 0.3f, 0.7f, 1.0f);
 
-        square = new Square(squareTexture, assets);
+        square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
         squareTexture.recycle();
     }
 
     public void onDrawFrame(GL10 unused) {
-
-
-
-        /*Matrix.multiplyMM(modelViewProjectionMatrix, 0,
-                          viewMatrix, 0,
-                          projectionMatrix, 0);*/
-
-
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
         square.draw(viewMatrix, projectionMatrix);

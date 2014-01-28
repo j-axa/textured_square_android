@@ -38,10 +38,10 @@ public final class ShaderUtils {
 
         // add the source code to the shader and compile it
         GLES30.glShaderSource(shader, shaderCode);
-        OpenGLRenderer.checkGlError("glShaderSource");
+        //OpenGLRenderer.checkGlError("glShaderSource");
 
         GLES30.glCompileShader(shader);
-        OpenGLRenderer.checkGlError("glCompileShader");
+        //OpenGLRenderer.checkGlError("glCompileShader");
         //Log.d("ShaderUtils.createShader", "glGetShaderInfoLog: " +GLES30.glGetShaderInfoLog(shader) );
 
         return shader;
