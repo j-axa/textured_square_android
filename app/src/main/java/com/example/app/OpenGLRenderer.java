@@ -31,7 +31,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         squareFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/simple_fragment.glsl");
 
         Matrix.setLookAtM(viewMatrix, 0,
-                          0f, 0f, -3f, // eye XYZ
+                          0f, 0f, -10f, // eye XYZ
                           0f, 0f, 0f,  // center XYZ
                           0f, 1f, 0f); // up XYZ
     }
@@ -44,7 +44,6 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glClearColor(0.3f, 0.3f, 0.7f, 1.0f);
 
         square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
-        squareTexture.recycle();
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -57,7 +56,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glViewport(0, 0, width, height);
 
         final float aspectRatio = (float)width / height;
-        Matrix.frustumM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1, 1, 3, 7);
+        Matrix.frustumM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1, 1, 1, 100);
     }
 
     public static void checkGlError(final String glOperation) {
