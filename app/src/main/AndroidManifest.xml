@@ -14,9 +14,10 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.app.OpenGLActivity"
+            android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_open_gl"
-            android:theme="@style/FullscreenTheme" >
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
