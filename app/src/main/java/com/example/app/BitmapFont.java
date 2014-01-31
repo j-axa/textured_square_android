@@ -113,11 +113,20 @@ public class BitmapFont {
     //              V
 
     public float[] getCharUV(char c) {
+        /*
+        const float tw = float(spriteWidth) / texWidth;
+        const float th = float(spriteHeight) / texHeight;
+        const int numPerRow = texWidth / spriteWidth;
+        const float tx = (frameIndex % numPerRow) * tw;
+        const float ty = (frameIndex / numPerRow + 1) * th;
+        */
+        final float tw = _charDim[0] / (float) _sheetDim[0];
+        final float th = _charDim[1] / (float) _sheetDim[1];
         final int cols = getSheetCols();
-        final int rows = getSheetRows();
+        //final int rows = getSheetRows();
         final int i = _fontMap.indexOf(c);
-        final float u = (i % cols) / (float)cols;
-        final float v = (i / rows) / (float)rows;
+        final float u = (i % cols) * tw;
+        final float v = (i / cols + 1) * th;
         return new float[] { u, v };
     }
 

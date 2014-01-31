@@ -38,7 +38,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         squareVertexShaderCode = ShaderUtils.loadShader(assets, "shader/simple_vertex.glsl");
         squareFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/simple_fragment.glsl");
 
-        fontSheetTexture = TextureUtils.loadTextureData(assets, "texture/bmpfont.png");
+        fontSheetTexture = TextureUtils.loadTextureData(assets, "texture/bmpfont1.png");
         fontSheetVertexShaderCode = ShaderUtils.loadShader(assets, "shader/bmpfont_vertex.glsl");
         fontSheetFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/bmpfont_fragment.glsl");
 
@@ -58,7 +58,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
         square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
         final String fontMap = " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~";
-        font = new BitmapFont(1152, 16, 16, 16, fontSheetTexture, fontMap, fontSheetVertexShaderCode, fontSheetFragmentShaderCode);
+        font = new BitmapFont(576, 32, 16, 16, fontSheetTexture, fontMap, fontSheetVertexShaderCode, fontSheetFragmentShaderCode);
         fpsText = new BitmapText(font, "");
     }
 
@@ -69,7 +69,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
         frameCount++;
         if(System.nanoTime() - lastFpsUpdate >= 1000000000) {
-            fpsText = new BitmapText(font, String.format("FPS: %d", frameCount));
+            fpsText = new BitmapText(font, String.format("FPS: %d :)", frameCount));
             frameCount = 0;
             lastFpsUpdate = System.nanoTime();
         }
