@@ -21,15 +21,15 @@ mat4 rotate() {
   vec3 s = sin(rads);
   vec3 c = cos(rads);
   mat4 rx = mat4(1.0f, 0.0f, 0.0f, 0.0f, 
-                 0.0f, c.x, s.x, 0.0f, 
-                 0.0f, -s.x, c.x, 0.0f, 
+                 0.0f, c.x, -s.x, 0.0f, 
+                 0.0f, s.x, c.x, 0.0f, 
                  0.0f, 0.0f, 0.0f, 1.0f);
-  mat4 ry = mat4(c.y, 0.0f, -s.y, 0.0f, 
+  mat4 ry = mat4(c.y, 0.0f, s.y, 0.0f, 
                  0.0f, 1.0f, 0.0f, 0.0f,
-                 s.y, 0.0f, c.y, 0.0f,
+                 -s.y, 0.0f, c.y, 0.0f,
                  0.0f, 0.0f, 0.0f, 1.0f);
-  mat4 rz = mat4(c.z, -s.z, 0.0f, 0.0f,
-                 s.z, c.z, 0.0f, 0.0f, 
+  mat4 rz = mat4(c.z, s.z, 0.0f, 0.0f,
+                 -s.z, c.z, 0.0f, 0.0f, 
                  0.0f, 0.0f, 1.0f, 0.0f, 
                  0.0f, 0.0f, 0.0f, 1.0f);
   return rz * ry * rx;
