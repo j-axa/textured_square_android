@@ -94,8 +94,8 @@ public class Square {
         GLES30.glLinkProgram(shaderProgram);
 
         translate(0, 5.0f, 0);
-        scale(3.0f, 3.0f, 3.0f);
-        rotate(0, 0, 45.0f);
+        scale(4.0f, 4.0f, 4.0f);
+        rotate(0, 0, -45.0f);
     }
 
     public void draw(float[] viewMatrix, float[] projectionMatrix) {

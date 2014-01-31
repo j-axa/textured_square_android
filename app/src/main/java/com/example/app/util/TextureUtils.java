@@ -28,7 +28,7 @@ public final class TextureUtils {
             // Set filtering
             GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST);
             GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST);
-
+            
             // Load the bitmap into the bound texture.
             GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0);
         }

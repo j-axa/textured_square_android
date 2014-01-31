@@ -10,5 +10,5 @@ in vec4 vColor;
 out vec4 color;
 
 void main() {
-  color = texture(uTexture, vTexCoord);
+  color = texture(uTexture, vTexCoord) * vColor;
 }

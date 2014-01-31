@@ -52,7 +52,7 @@ mat4 scale() {
 
 void main() {
   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * translate() * rotate() * scale() * vPosition;
-  vColor = vec4(0.3f, 0.5f, 0.7f, 1.0f);
+  vColor = vec4(0.8f, 0.3f, 0.5f, 1.0f);
   vTexCoord = aTexCoord;
 }
 
