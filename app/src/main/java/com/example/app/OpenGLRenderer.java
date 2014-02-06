@@ -32,6 +32,11 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     private int frameCount;
     private long lastFpsUpdate;
 
+    private final Bitmap fighterTexture;
+    private final String fighterVertexShaderCode;
+    private final String fighterFragmentShaderCode;
+    private Fighter fighter;
+
     public OpenGLRenderer(final Context context) {
         AssetManager assets = context.getAssets();
         squareTexture = TextureUtils.loadTextureData(assets, "texture/placeholder512.png");
@@ -42,6 +47,9 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         fontSheetVertexShaderCode = ShaderUtils.loadShader(assets, "shader/bmpfont_vertex.glsl");
         fontSheetFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/bmpfont_fragment.glsl");
 
+        fighterTexture = TextureUtils.loadTextureData(assets, "texture/fighter.png");
+        fighterVertexShaderCode = ShaderUtils.loadShader(assets, "shader/fighter_vertex.glsl");
+        fighterFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/fighter_fragment.glsl");
 
         Matrix.setLookAtM(viewMatrix, 0,
                           0f, 0f, -10f, // eye XYZ
@@ -56,6 +64,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES30.glClearColor(0.3f, 0.3f, 0.7f, 1.0f);
 
+        fighter = new Fighter(fighterTexture, fighterVertexShaderCode, fighterFragmentShaderCode);
         square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
         final String fontMap = " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~";
         font = new BitmapFont(576, 32, 16, 16, fontSheetTexture, fontMap, fontSheetVertexShaderCode, fontSheetFragmentShaderCode);
@@ -66,6 +75,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
         square.draw(viewMatrix, projectionMatrix);
+        fighter.draw(viewMatrix, projectionMatrix);
 
         frameCount++;
         if(System.nanoTime() - lastFpsUpdate >= 1000000000) {
