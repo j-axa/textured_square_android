@@ -28,6 +28,8 @@ public class BitmapFont {
       Assign texture coordinates to the vertices with (0, 0), (0, 1), (1, 1), (1, 0), respectively.
     * */
 
+
+
     static float[] baseTextureCoords = {
             0.0f, 0.0f,
             0.0f, 1.0f,

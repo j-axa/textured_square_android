@@ -16,9 +16,9 @@ in vec2 aTexCoord;
 
 out vec4 vColor;
 out vec2 vTexCoord;
-/*
-mat4 rotate() {
-  vec3 rads = radians(uRotationVector);
+/**/
+mat4 rotate(vec3 rotation) {
+  vec3 rads = radians(rotation);
   vec3 s = sin(rads);
   vec3 c = cos(rads);
   mat4 rx = mat4(1.0f, 0.0f, 0.0f, 0.0f, 
@@ -35,14 +35,14 @@ mat4 rotate() {
                  0.0f, 0.0f, 0.0f, 1.0f);
   return rz * ry * rx;
 }
-
+//*/
 mat4 translate() {
     return mat4(1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
-                uTranslationVector.x, uTranslationVector.y, uTranslationVector.z, 1.0f);
+                0.0f, -4.0f/*move down a bit*/, 0.0f, 1.0f);
 }
-*/
+
 mat4 scale() {
     return mat4(2.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 2.0f, 0.0f, 0.0f,
@@ -52,7 +52,7 @@ mat4 scale() {
 
 
 void main() {
-  gl_Position = uProjectionMatrix * uViewMatrix * scale() * vPosition;
+  gl_Position = uProjectionMatrix * uViewMatrix *translate()*rotate(vec3(0.0f, 0.0f, 180.0f /*point 'up'*/))* scale() * vPosition;
   vColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
   vTexCoord = aTexCoord;
 }

@@ -19,11 +19,11 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
-    private final Bitmap squareTexture;
+/*    private final Bitmap squareTexture;
     private final String squareVertexShaderCode;
     private final String squareFragmentShaderCode;
     private Square square;
-
+*/
     private final Bitmap fontSheetTexture ;
     private final String fontSheetVertexShaderCode ;
     private final String fontSheetFragmentShaderCode;
@@ -39,10 +39,10 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
     public OpenGLRenderer(final Context context) {
         AssetManager assets = context.getAssets();
-        squareTexture = TextureUtils.loadTextureData(assets, "texture/placeholder512.png");
+        /*squareTexture = TextureUtils.loadTextureData(assets, "texture/placeholder512.png");
         squareVertexShaderCode = ShaderUtils.loadShader(assets, "shader/simple_vertex.glsl");
         squareFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/simple_fragment.glsl");
-
+*/
         fontSheetTexture = TextureUtils.loadTextureData(assets, "texture/bmpfont1.png");
         fontSheetVertexShaderCode = ShaderUtils.loadShader(assets, "shader/bmpfont_vertex.glsl");
         fontSheetFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/bmpfont_fragment.glsl");
@@ -65,7 +65,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glClearColor(0.3f, 0.3f, 0.7f, 1.0f);
 
         fighter = new Fighter(fighterTexture, fighterVertexShaderCode, fighterFragmentShaderCode);
-        square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
+        //square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
         final String fontMap = " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~";
         font = new BitmapFont(576, 32, 16, 16, fontSheetTexture, fontMap, fontSheetVertexShaderCode, fontSheetFragmentShaderCode);
         fpsText = new BitmapText(font, "");
@@ -74,12 +74,12 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
-        square.draw(viewMatrix, projectionMatrix);
+        //square.draw(viewMatrix, projectionMatrix);
         fighter.draw(viewMatrix, projectionMatrix);
 
         frameCount++;
         if(System.nanoTime() - lastFpsUpdate >= 1000000000) {
-            fpsText = new BitmapText(font, String.format("FPS: %d :)", frameCount));
+            fpsText = new BitmapText(font, String.format("FPS: %d", frameCount));
             frameCount = 0;
             lastFpsUpdate = System.nanoTime();
         }

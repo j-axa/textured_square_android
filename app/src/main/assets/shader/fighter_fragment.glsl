@@ -1,14 +1,15 @@
 #version 300 es
 
-precision mediump float;
+precision mediump float ;
 
-uniform sampler2D uTexture;
+uniform sampler2D uTexture ;
 
-in vec2 vTexCoord;
-in vec4 vColor;
+in vec2 vTexCoord ;
+in vec4 vColor ;
 
-out vec4 color;
+out vec4 color ;
 
-void main() {
-  color = texture(uTexture, vTexCoord) * vColor;
+void main ( ) {
+    vec2 uv = vec2 ( vTexCoord.s , 1.0f - vTexCoord.t ) ;
+    color = texture ( uTexture , uv ) * vColor ;
 }

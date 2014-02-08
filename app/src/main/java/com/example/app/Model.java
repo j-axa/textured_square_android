@@ -17,7 +17,7 @@ import java.nio.ShortBuffer;
 public abstract class Model {
     abstract short[] getDrawOrder();
     abstract float[] getVertices();
-    abstract float[] getNormals();
+    //abstract float[] getNormals();
     abstract float[] getUvs();
 
     static final int COORDS_PER_VERTEX = 3;
