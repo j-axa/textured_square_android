@@ -14,12 +14,7 @@ import java.nio.ShortBuffer;
 /**
  * Created by josaxa on 2014-02-05.
  */
-public abstract class Model {
-    abstract short[] getDrawOrder();
-    abstract float[] getVertices();
-    //abstract float[] getNormals();
-    abstract float[] getUvs();
-
+public class Model {
     static final int COORDS_PER_VERTEX = 3;
     static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
@@ -28,48 +23,50 @@ public abstract class Model {
     private final FloatBuffer textureCoordinates;
     private final int shaderProgram;
     private final int textureDataHandle;
+    private final ModelDefinition definition;
+    private final int vertexCount;
 
-    public Model(final Bitmap texture, final String vertexShaderCode, final String fragmentShaderCode) {
-        final float[] vertexCoords = getVertices();
-        final short[] drawOrder = getDrawOrder();
-        final float[] uvs = getUvs();
-        // initialize vertex byte buffer for shape coordinates
-        ByteBuffer bb = ByteBuffer.allocateDirect(
-                // (# of coordinate values * 4 bytes per float)
-                vertexCoords.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(vertexCoords);
-        vertexBuffer.position(0);
+    public Model(final ModelDefinition modelDefinition, final Bitmap texture, final String vertexShaderCode, final String fragmentShaderCode) {
+        definition = modelDefinition;
+        final float[] vertices = definition.getVertices();
+        vertexCount = vertices.length / COORDS_PER_VERTEX;
+        vertexBuffer = allocateFloatBuffer(vertices);
+        drawListBuffer = allocateShortBuffer(definition.getDrawOrder());
 
-        // initialize byte buffer for the draw list
-        ByteBuffer dlb = ByteBuffer.allocateDirect(
-                // (# of coordinate values * 2 bytes per short)
-                drawOrder.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        drawListBuffer = dlb.asShortBuffer();
-        drawListBuffer.put(drawOrder);
-        drawListBuffer.position(0);
-
-        //
-        // load texture and create texturecoordinates
-        //
         textureDataHandle = TextureUtils.createTexture(texture);
-        textureCoordinates = ByteBuffer.allocateDirect(uvs.length * 4)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        textureCoordinates.put(uvs);
-        textureCoordinates.position(0);
+        textureCoordinates = allocateFloatBuffer(definition.getUvs());
 
+        shaderProgram = compileShader(vertexShaderCode, fragmentShaderCode);
+    }
 
-        //
-        // create shader
-        //
+    private static ShortBuffer allocateShortBuffer(final short[] arr) {
+        final ShortBuffer buffer = ByteBuffer
+                .allocateDirect(arr.length * 2/*bytes per short*/)
+                .order(ByteOrder.nativeOrder())
+                .asShortBuffer();
+        buffer.put(arr);
+        buffer.position(0);
+        return buffer;
+    }
+
+    private static FloatBuffer allocateFloatBuffer(final float[] arr) {
+        final FloatBuffer buffer = ByteBuffer
+                .allocateDirect(arr.length * 4/*bytes per float*/)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        buffer.put(arr);
+        buffer.position(0);
+        return buffer;
+    }
+
+    private static int compileShader(String vertexShaderCode, String fragmentShaderCode) {
         final int vertexShader = ShaderUtils.createShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
         final int fragmentShader = ShaderUtils.createShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
-        shaderProgram = GLES30.glCreateProgram();
-        GLES30.glAttachShader(shaderProgram, vertexShader);
-        GLES30.glAttachShader(shaderProgram, fragmentShader);
-        GLES30.glLinkProgram(shaderProgram);
+        final int shader = GLES30.glCreateProgram();
+        GLES30.glAttachShader(shader, vertexShader);
+        GLES30.glAttachShader(shader, fragmentShader);
+        GLES30.glLinkProgram(shader);
+        return shader;
     }
 
     public void draw(final float[] viewMatrix, final float[] projectionMatrix) {
