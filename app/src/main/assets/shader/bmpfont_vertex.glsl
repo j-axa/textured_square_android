@@ -7,8 +7,8 @@
 #define _1_9TH (1.0f / 9.0f)
 
 #define CHAR_SCALE (0.25f)
-#define CHAR_WIDTH (_1_16TH * CHAR_SCALE)
-#define CHAR_HEIGHT (_1_9TH * CHAR_SCALE)
+#define CHAR_WIDTH (_1_9TH * CHAR_SCALE)
+#define CHAR_HEIGHT (_1_16TH * CHAR_SCALE)
 #define CHAR_SPACE (CHAR_WIDTH * 2.0f)
 
 uniform vec2 uInstanceUV[80]; // max 50 chars
@@ -26,7 +26,7 @@ mat4 translate() {
     return mat4(1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
-                -1.0f + CHAR_WIDTH + float(gl_InstanceID) * CHAR_SPACE, 1.0f - CHAR_SPACE, 0.0f, 1.0f);
+                -1.0f + CHAR_WIDTH + float(gl_InstanceID) * CHAR_SPACE, 1.0f - 0.5f * CHAR_SPACE, 0.0f, 1.0f);
 }
 mat4 scale() {
     return mat4(CHAR_WIDTH, 0.0f, 0.0f, 0.0f,
