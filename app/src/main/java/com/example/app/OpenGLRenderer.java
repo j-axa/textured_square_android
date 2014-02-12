@@ -35,7 +35,8 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     private final Bitmap fighterTexture;
     private final String fighterVertexShaderCode;
     private final String fighterFragmentShaderCode;
-    private Fighter fighter;
+    private ModelDefinition fighter;
+    private Model fighterModel;
 
     public OpenGLRenderer(final Context context) {
         AssetManager assets = context.getAssets();
@@ -51,6 +52,9 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         fighterVertexShaderCode = ShaderUtils.loadShader(assets, "shader/fighter_vertex.glsl");
         fighterFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/fighter_fragment.glsl");
 
+        final String fighterObj = ShaderUtils.loadShader(assets, "model/fighter.obj");
+        fighter = ObjLoader.parseObj(fighterObj);
+
         Matrix.setLookAtM(viewMatrix, 0,
                           0f, 0f, -10f, // eye XYZ
                           0f, 0f, 0f,  // center XYZ
@@ -64,7 +68,16 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES30.glClearColor(0.3f, 0.3f, 0.7f, 1.0f);
 
-        fighter = new Fighter(fighterTexture, fighterVertexShaderCode, fighterFragmentShaderCode);
+        //GLES30.glEnable(GLES30.GL_DEPTH_TEST);
+        //GLES30.glDepthFunc(GLES30.GL_LEQUAL);
+
+        //
+        //
+        //GLES30.glEnable(GLES30.GL_CULL_FACE);
+        //GLES30.glCullFace(GLES30.GL_BACK);
+        //GLES30.glFrontFace(GLES30.GL_CCW);
+
+        fighterModel = new Model(fighter, fighterTexture, fighterVertexShaderCode, fighterFragmentShaderCode);
         //square = new Square(squareTexture, squareVertexShaderCode, squareFragmentShaderCode);
         final String fontMap = " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~";
         font = new BitmapFont(576, 32, 16, 16, fontSheetTexture, fontMap, fontSheetVertexShaderCode, fontSheetFragmentShaderCode);
@@ -73,12 +86,13 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
     public void onDrawFrame(GL10 unused) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-
+        final long time = System.nanoTime();
+        final int itime = (int)(time / 1000);
         //square.draw(viewMatrix, projectionMatrix);
-        fighter.draw(viewMatrix, projectionMatrix);
+        fighterModel.draw(viewMatrix, projectionMatrix, itime);
 
         frameCount++;
-        if(System.nanoTime() - lastFpsUpdate >= 1000000000) {
+        if(time - lastFpsUpdate >= 1000000000) {
             fpsText = new BitmapText(font, String.format("FPS: %d", frameCount));
             frameCount = 0;
             lastFpsUpdate = System.nanoTime();

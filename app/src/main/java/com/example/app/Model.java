@@ -69,12 +69,51 @@ public class Model {
         return shader;
     }
 
-    public void draw(final float[] viewMatrix, final float[] projectionMatrix) {
+    public void draw(final float[] viewMatrix, final float[] projectionMatrix, final int time) {
         GLES30.glUseProgram(shaderProgram);
 
-        //
-        // texture
-        //
+        bindTexture();
+
+        bindUvs();
+
+        final int mPositionHandle = bindPosition();
+
+        bindMatrix4fv("uProjectionMatrix", projectionMatrix);
+        bindMatrix4fv("uViewMatrix", viewMatrix);
+
+        bindInt("uTime", time);
+
+
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount);
+        //GLES30.glDrawElements(GLES30.GL_TRIANGLES, vertexCount, GLES30.GL_UNSIGNED_SHORT, drawListBuffer);
+
+        // Disable vertex array
+        GLES30.glDisableVertexAttribArray(mPositionHandle);
+    }
+
+    private void bindInt(final String name, final int i) {
+        final int handle = GLES30.glGetUniformLocation(shaderProgram, name);
+        GLES30.glUniform1i(handle, i);
+    }
+
+    private void bindMatrix4fv(final String name, final float[] matrix) {
+        final int matrixHandle = GLES30.glGetUniformLocation(shaderProgram, name);
+        GLES30.glUniformMatrix4fv(matrixHandle, 1, false, matrix, 0);
+    }
+
+    private void bindUvs() {
+        final int mTextureCoordinateHandle = GLES30.glGetAttribLocation(shaderProgram, "aTexCoord");
+
+        textureCoordinates.position(0);
+        GLES30.glVertexAttribPointer(mTextureCoordinateHandle,
+                2 /** Size of the texture coordinate data in elements. */,
+                GLES30.GL_FLOAT, false,
+                0, textureCoordinates);
+
+        GLES30.glEnableVertexAttribArray(mTextureCoordinateHandle);
+    }
+
+    private void bindTexture() {
         final int mTextureUniformHandle = GLES30.glGetUniformLocation(shaderProgram, "uTexture");
 
         // Set the active texture unit to texture unit 0.
@@ -85,21 +124,9 @@ public class Model {
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
         GLES30.glUniform1i(mTextureUniformHandle, 0);
+    }
 
-        final int mTextureCoordinateHandle = GLES30.glGetAttribLocation(shaderProgram, "aTexCoord");
-
-        textureCoordinates.position(0);
-        GLES30.glVertexAttribPointer(mTextureCoordinateHandle,
-                2 /** Size of the texture coordinate data in elements. */,
-                GLES30.GL_FLOAT, false,
-                0, textureCoordinates);
-
-        GLES30.glEnableVertexAttribArray(mTextureCoordinateHandle);
-
-        //
-        // geometry
-        //
-        // get handle to vertex shader's vPosition member
+    private int bindPosition() {
         final int mPositionHandle = GLES30.glGetAttribLocation(shaderProgram, "vPosition");
 
         // Enable a handle to the triangle vertices
@@ -109,39 +136,7 @@ public class Model {
         GLES30.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
                 GLES30.GL_FLOAT, false,
                 VERTEX_STRIDE, vertexBuffer);
-
-
-        //
-        // projection, view, scale, translate, rotate matrices
-        //
-        // projection
-        final int projectionMatrixHandle = GLES30.glGetUniformLocation(shaderProgram, "uProjectionMatrix");
-        GLES30.glUniformMatrix4fv(projectionMatrixHandle, 1, false, projectionMatrix, 0);
-
-        // view
-        final int viewMatrixHandle = GLES30.glGetUniformLocation(shaderProgram, "uViewMatrix");
-        GLES30.glUniformMatrix4fv(viewMatrixHandle, 1, false, viewMatrix, 0);
-/*
-        // model
-        final int modelMatrixHandle = GLES30.glGetUniformLocation(shaderProgram, "uModelMatrix");
-        GLES30.glUniformMatrix4fv(modelMatrixHandle, 1, false, modelMatrix, 0);
-/*
-        // translation
-        final int translationVectorHandle = GLES30.glGetUniformLocation(shaderProgram, "uTranslationVector");
-        GLES30.glUniform3fv(translationVectorHandle, 1, translationVector, 0);
-
-        // rotation
-        final int rotationVectorHandle = GLES30.glGetUniformLocation(shaderProgram, "uRotationVector");
-        GLES30.glUniform3fv(rotationVectorHandle, 1, rotationVector, 0);
-
-        // scale
-        final int scaleVectorHandle = GLES30.glGetUniformLocation(shaderProgram, "uScaleVector");
-        GLES30.glUniform3fv(scaleVectorHandle, 1, scaleVector, 0);
-*/
-        short[] drawOrder = getDrawOrder();
-        GLES30.glDrawElements(GLES30.GL_TRIANGLES, drawOrder.length, GLES30.GL_UNSIGNED_SHORT, drawListBuffer);
-
-        // Disable vertex array
-        GLES30.glDisableVertexAttribArray(mPositionHandle);
+        return mPositionHandle;
     }
 }
+
