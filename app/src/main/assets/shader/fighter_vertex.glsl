@@ -2,23 +2,17 @@
 
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
-/*
-uniform mat4 uModelMatrix;
-/*
+
 uniform vec3 uTranslationVector;
 uniform vec3 uRotationVector;
 uniform vec3 uScaleVector;
-*/
-
-uniform int uTime;
 
 in vec3 vPosition;
 in vec2 aTexCoord;
 
-
 out vec4 vColor;
 out vec2 vTexCoord;
-/**/
+
 mat4 rotate(vec3 rotation) {
   vec3 rads = radians(rotation);
   vec3 s = sin(rads);
@@ -37,7 +31,7 @@ mat4 rotate(vec3 rotation) {
                  0.0f, 0.0f, 0.0f, 1.0f);
   return rz * ry * rx;
 }
-//*/
+
 mat4 translate(vec3 t) {
     return mat4(1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
@@ -53,12 +47,9 @@ mat4 scale(vec3 s) {
 }
 
 void main() {
-  float x = float((uTime / 50000) % 359);
-  vec3 t = vec3(0.0f);
-  vec3 s = vec3(2.5f);
-  vec3 r = vec3(x, x, 0.0f);
-  gl_Position = uProjectionMatrix * uViewMatrix *translate(t)*  rotate(r) * scale(s) * vec4(vPosition, 1.0f); // /*inverse z*/ vec4 (1.0, 1.0, -1.0, 1.0)) ;
-  
+  mat4 model = translate(uTranslationVector) * rotate(uRotationVector) * scale(uScaleVector);
+  gl_Position = uProjectionMatrix * uViewMatrix * model * vec4(vPosition, 1.0f);
+
   vColor = vec4(1.0f, 1.0f, 1.0f, 1.0f); 
   vTexCoord = aTexCoord;
 }
