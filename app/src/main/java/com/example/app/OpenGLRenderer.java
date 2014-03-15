@@ -42,7 +42,6 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         fighterTexture = TextureUtils.loadTextureData(assets, "texture/fighter.png");
         fighterVertexShaderCode = ShaderUtils.loadShader(assets, "shader/fighter_vertex.glsl");
         fighterFragmentShaderCode = ShaderUtils.loadShader(assets, "shader/fighter_fragment.glsl");
-
         final String fighterObj = ShaderUtils.loadShader(assets, "model/fighter.obj");
         fighter = ObjLoader.parseObj(fighterObj);
 
@@ -58,14 +57,12 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES30.glClearColor(0.3f, 0.3f, 0.7f, 1.0f);
 
-        // depth testing necessary to not draw further away faces on top of nearer ones that should obscure the further faces
         GLES30.glEnable(GLES30.GL_DEPTH_TEST);
         GLES30.glDepthFunc(GLES30.GL_LEQUAL);
 
-        // cull backfaces, apparently my winding is clockwise, since this gives the correct result :)
         GLES30.glEnable(GLES30.GL_CULL_FACE);
         GLES30.glCullFace(GLES30.GL_BACK);
-        GLES30.glFrontFace(GLES30.GL_CW);
+        GLES30.glFrontFace(GLES30.GL_CCW);
 
         fighterModel = new Model(fighter, fighterTexture, fighterVertexShaderCode, fighterFragmentShaderCode);
 
@@ -78,8 +75,8 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     private long lastTime;
 
     public void onDrawFrame(GL10 unused) {
-        // must glclear with depth_buffer_bit with depth_test enabled
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
+
         final long time = System.nanoTime();
         final int itime = (int)(time / 1000000);
         ++frameCount;

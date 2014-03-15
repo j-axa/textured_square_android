@@ -40,7 +40,7 @@ public class BitmapFont {
             -1f,  1f, 0.0f,
              1f,  1f, 0.0f,
              1f, -1f, 0.0f };
-    static short drawOrder[] = {0, 1, 2, 0, 2, 3};
+    static short drawOrder[] = {2, 1, 0, 3, 2, 0};
 
     public static final int COORDS_PER_VERTEX = 3;
     public static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
@@ -94,12 +94,7 @@ public class BitmapFont {
         //
         // create shader
         //
-        final int vertexShader = ShaderUtils.createShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
-        final int fragmentShader = ShaderUtils.createShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
-        shaderProgram = GLES30.glCreateProgram();
-        GLES30.glAttachShader(shaderProgram, vertexShader);
-        GLES30.glAttachShader(shaderProgram, fragmentShader);
-        GLES30.glLinkProgram(shaderProgram);
+        shaderProgram = ShaderUtils.compileShader(vertexShaderCode, fragmentShaderCode);
     }
 
     public int getSheetRows() {

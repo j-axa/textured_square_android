@@ -33,7 +33,7 @@ public final class ShaderUtils {
         }
     }
 
-    public static int createShader(final int gl_shader_type, final String shaderCode) {
+    private static int createShader(final int gl_shader_type, final String shaderCode) {
         final int shader = GLES30.glCreateShader(gl_shader_type);
 
         // add the source code to the shader and compile it
@@ -45,5 +45,15 @@ public final class ShaderUtils {
         Log.d("ShaderUtils.createShader", "glGetShaderInfoLog: " +GLES30.glGetShaderInfoLog(shader) );
 
         return shader;
+    }
+
+    public static int compileShader(final String vertexShaderCode, final String fragmentShaderCode) {
+        final int vertexShader = createShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
+        final int fragmentShader = createShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        final int shaderProgram = GLES30.glCreateProgram();
+        GLES30.glAttachShader(shaderProgram, vertexShader);
+        GLES30.glAttachShader(shaderProgram, fragmentShader);
+        GLES30.glLinkProgram(shaderProgram);
+        return shaderProgram;
     }
 }

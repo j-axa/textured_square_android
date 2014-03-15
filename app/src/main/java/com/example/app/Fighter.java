@@ -623,9 +623,6 @@ public final class Fighter extends ModelDefinition {
     float[] getUvs(){return Fighter.uvs;}
 
     @Override
-    short[] getDrawOrder(){return Fighter.drawOrder;}
-
-    @Override
     float[] getNormals(){return Fighter.normals;}
 }
 
