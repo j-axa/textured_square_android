@@ -24,8 +24,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     private final String fontSheetFragmentShaderCode;
     private BitmapFont font;
     private BitmapText fpsText;
-    private int frameCount;
-    private long lastFpsUpdate;
+
 
     private final Bitmap fighterTexture;
     private final String fighterVertexShaderCode;
@@ -72,26 +71,26 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
         final String fontMap = " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~";
         font = new BitmapFont(576, 32, 16, 16, fontSheetTexture, fontMap, fontSheetVertexShaderCode, fontSheetFragmentShaderCode);
-        fpsText = new BitmapText(font, "");
+        fpsText = new BitmapText(font);
     }
+
+    private long frameCount;
+    private long lastTime;
 
     public void onDrawFrame(GL10 unused) {
         // must glclear with depth_buffer_bit with depth_test enabled
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
         final long time = System.nanoTime();
         final int itime = (int)(time / 1000000);
+        ++frameCount;
 
         fighterModel.update(itime);
         fighterModel.draw(viewMatrix, projectionMatrix);
 
-        frameCount++;
-        final long delta = time - lastFpsUpdate;
-        if(delta >= 1000000000) {
-            fpsText = new BitmapText(font, String.format("FPS: %d MS/FRAME: %.2f", frameCount, (delta / 1000000) / (float)frameCount));
-            frameCount = 0;
-            lastFpsUpdate = System.nanoTime();
-        }
+        fpsText.update(time, lastTime, frameCount);
         fpsText.draw();
+
+        lastTime = time;
     }
 
 

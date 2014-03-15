@@ -6,26 +6,14 @@ import android.os.Build;
 
 import java.nio.FloatBuffer;
 
-public class BitmapText{
+public class BitmapText implements OpenGLDrawable {
 
     private final BitmapFont font;
     private final float[] uvs = new float[160];
-    private final int length;
+    private int length;
 
-    public BitmapText(final BitmapFont font, final String s) {
+    public BitmapText(final BitmapFont font) {
         this.font = font;
-
-        length = s.length();
-        if(length > 80) {
-            throw new RuntimeException("max 80 chars allowed");
-        }
-
-        for(int i = 0, j = 0; i < length; ++i, j = i * 2) {
-            char c = s.charAt(i);
-            float[] uv = font.getCharUV(c);
-            uvs[j    ] = uv[0];
-            uvs[j + 1] = uv[1];
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -94,5 +82,31 @@ public class BitmapText{
 
         // Disable vertex array
         GLES30.glDisableVertexAttribArray(mPositionHandle);
+    }
+
+    @Override
+    public void draw(float[] viewMatrix, float[] projectionMatrix) {
+        draw();
+    }
+
+    long lastFrameCount;
+
+    @Override
+    public void update(long time, long lastTime, long frameCount) {
+        final long deltaMs = (time - lastTime) / 1000000;
+        if(deltaMs >= 1000) {
+            final long frameDelta = frameCount - lastFrameCount;
+            lastFrameCount = frameCount;
+            final float frameMs = deltaMs / (float)frameDelta;
+            final int fps = Math.round(1000 / frameMs);
+            final String s = String.format("~ FPS: %d ~ MS: %.2f ~", frameCount, frameMs);
+            length = s.length();
+            for(int i = 0, j = 0; i < length; ++i, j = i * 2) {
+                char c = s.charAt(i);
+                float[] uv = font.getCharUV(c);
+                uvs[j    ] = uv[0];
+                uvs[j + 1] = uv[1];
+            }
+        }
     }
 }
